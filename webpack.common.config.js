@@ -5,15 +5,13 @@ const dotEnv = require('dotenv-webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 const cwd = process.cwd();
 const outputPath = path.join(cwd, 'build');
 
 module.exports = {
   context: path.resolve(cwd, './'),
-  mode: isProduction ? 'production' : 'development',
-  devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
+  mode: 'development',
+  devtool: 'cheap-module-source-map',
   entry: [path.resolve(__dirname, './src/index.tsx')],
   output: {
     path: outputPath,
@@ -42,11 +40,12 @@ module.exports = {
     new dotEnv({
       path: './.env',
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new ReactRefreshPlugin(),
     new HtmlWebpackPlugin(),
+    new webpack.DefinePlugin({
+      'NODE_ENV': JSON.stringify('development'),
+    }),
   ],
-  watch: true,
   devServer: {
     contentBase: outputPath,
     disableHostCheck: true,
